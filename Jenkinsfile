@@ -47,7 +47,7 @@ pipeline {
 
                         pip install --no-cache-dir -r requirements.txt
 
-                        pytest -v
+                        python -m pytest -v
 
                         deactivate
 

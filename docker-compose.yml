@@ -3,7 +3,7 @@ services:
   jenkins:
     build:
       context: ./jenkins
-    image: shopsphere-jenkins:1.0
+    image: shopsphere-jenkins:1.1
     container_name: jenkins
     user: root
     ports:

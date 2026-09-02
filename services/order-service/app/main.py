@@ -1,3 +1,4 @@
+import os
 import requests
 
 from fastapi import FastAPI, HTTPException
@@ -5,9 +6,20 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI(title="ShopSphere Order Service")
 
 
-USER_SERVICE_URL = "http://localhost:8001"
-PRODUCT_SERVICE_URL = "http://localhost:8002"
-PAYMENT_SERVICE_URL = "http://localhost:8004"
+USER_SERVICE_URL = os.getenv(
+    "USER_SERVICE_URL",
+    "http://localhost:8001"
+)
+
+PRODUCT_SERVICE_URL = os.getenv(
+    "PRODUCT_SERVICE_URL",
+    "http://localhost:8002"
+)
+
+PAYMENT_SERVICE_URL = os.getenv(
+    "PAYMENT_SERVICE_URL",
+    "http://localhost:8004"
+)
 
 
 @app.get("/")

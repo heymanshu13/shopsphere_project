@@ -1,0 +1,64 @@
+services:
+
+  user-service:
+    build:
+      context: ./services/user-service
+    image: shopsphere-user:1.0
+    container_name: user-service
+    ports:
+      - "8001:8000"
+    networks:
+      - shopsphere
+
+  product-service:
+    build:
+      context: ./services/product-service
+    image: shopsphere-product:1.0
+    container_name: product-service
+    ports:
+      - "8002:8000"
+    networks:
+      - shopsphere
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+    image: shopsphere-payment:1.0
+    container_name: payment-service
+    ports:
+      - "8004:8000"
+    networks:
+      - shopsphere
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+    image: shopsphere-notification:1.0
+    container_name: notification-service
+    ports:
+      - "8005:8000"
+    networks:
+      - shopsphere
+
+  order-service:
+    build:
+      context: ./services/order-service
+    image: shopsphere-order:1.0
+    container_name: order-service
+    ports:
+      - "8003:8000"
+    environment:
+      USER_SERVICE_URL: http://user-service:8000
+      PRODUCT_SERVICE_URL: http://product-service:8000
+      PAYMENT_SERVICE_URL: http://payment-service:8000
+    depends_on:
+      - user-service
+      - product-service
+      - payment-service
+    networks:
+      - shopsphere
+
+
+networks:
+  shopsphere:
+    driver: bridge

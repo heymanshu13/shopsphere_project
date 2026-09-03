@@ -164,6 +164,34 @@ pipeline {
             }
         }
 
+        stage('Cleanup Old Images') {
+        steps {
+            sh '''
+                set -e
+    
+                echo "Cleaning old ShopSphere Docker images..."
+    
+                for service in \
+                    shopsphere-user \
+                    shopsphere-product \
+                    shopsphere-order \
+                    shopsphere-payment \
+                    shopsphere-notification
+                do
+                    echo "Cleaning $service images..."
+    
+                    docker images "$service" \
+                        --format "{{.Repository}}:{{.Tag}}" \
+                        | grep -v ":${BUILD_NUMBER}$" \
+                        | xargs -r docker rmi || true
+                done
+    
+                echo "Remaining ShopSphere images:"
+                docker images | grep shopsphere || true
+            '''
+            }
+        }
+
         stage('Images') {
             steps {
                 sh '''

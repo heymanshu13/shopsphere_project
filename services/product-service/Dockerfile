@@ -1,14 +1,13 @@
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && useradd --create-home --shell /bin/bash appuser \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update \
+    && apk upgrade \
+    && adduser -D -s /bin/sh appuser
 
 COPY requirements.txt .
 

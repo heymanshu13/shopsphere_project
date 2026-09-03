@@ -1,11 +1,14 @@
 FROM python:3.12-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN useradd --create-home --shell /bin/bash appuser
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && useradd --create-home --shell /bin/bash appuser \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 

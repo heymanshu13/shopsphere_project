@@ -2,7 +2,7 @@ FROM jenkins/jenkins:lts-jdk21
 
 USER root
 
-# Install Python, Git, Docker CLI and required utilities
+# Install required packages
 RUN apt-get update \
     && apt-get install -y \
         python3 \
@@ -12,7 +12,11 @@ RUN apt-get update \
         curl \
         ca-certificates \
         gnupg \
-    && install -m 0755 -d /etc/apt/keyrings \
+        unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker CLI
+RUN install -m 0755 -d /etc/apt/keyrings \
     && curl -fsSL https://download.docker.com/linux/debian/gpg \
         -o /etc/apt/keyrings/docker.asc \
     && chmod a+r /etc/apt/keyrings/docker.asc \
@@ -24,7 +28,20 @@ RUN apt-get update \
     && apt-get install -y docker-ce-cli \
     && rm -rf /var/lib/apt/lists/*
 
-# Match the Docker socket group ID on the host
+# Install SonarScanner CLI
+ARG SONAR_SCANNER_VERSION=7.3.0.5189
+
+RUN curl -fSL \
+        "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux-x64.zip" \
+        -o /tmp/sonar-scanner.zip \
+    && unzip /tmp/sonar-scanner.zip -d /opt \
+    && mv /opt/sonar-scanner-${SONAR_SCANNER_VERSION}-linux-x64 /opt/sonar-scanner \
+    && rm /tmp/sonar-scanner.zip
+
+ENV SONAR_SCANNER_HOME=/opt/sonar-scanner
+ENV PATH="${SONAR_SCANNER_HOME}/bin:${PATH}"
+
+# Match Docker socket GID on host
 RUN groupadd -g 986 docker-host \
     && usermod -aG docker-host jenkins
 

@@ -164,31 +164,37 @@ pipeline {
             }
         }
 
-        stage('Cleanup Old Images') {
-        steps {
-            sh '''
-                set -e
-    
-                echo "Cleaning old ShopSphere Docker images..."
-    
-                for service in \
-                    shopsphere-user \
-                    shopsphere-product \
-                    shopsphere-order \
-                    shopsphere-payment \
-                    shopsphere-notification
-                do
-                    echo "Cleaning $service images..."
-    
-                    docker images "$service" \
-                        --format "{{.Repository}}:{{.Tag}}" \
-                        | grep -v ":${BUILD_NUMBER}$" \
-                        | xargs -r docker rmi || true
-                done
-    
-                echo "Remaining ShopSphere images:"
-                docker images | grep shopsphere || true
-            '''
+        stage('Cleanup Old ShopSphere Images') {
+            steps {
+                sh '''
+                    set -e
+        
+                    echo "========================================"
+                    echo "Cleaning old ShopSphere service images"
+                    echo "========================================"
+        
+                    for service in \
+                        shopsphere-user \
+                        shopsphere-product \
+                        shopsphere-order \
+                        shopsphere-payment \
+                        shopsphere-notification
+                    do
+                        echo "Cleaning old images for: $service"
+        
+                        docker images "$service" \
+                            --format "{{.Repository}}:{{.Tag}}" \
+                            | grep -v ":${BUILD_NUMBER}$" \
+                            | xargs -r docker rmi || true
+                    done
+        
+                    echo ""
+                    echo "========================================"
+                    echo "Remaining ShopSphere service images"
+                    echo "========================================"
+        
+                    docker images | grep -E '^shopsphere-(user|product|order|payment|notification)' || true
+                '''
             }
         }
 

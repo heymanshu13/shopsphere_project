@@ -272,22 +272,29 @@ pipeline {
         // ECR LOGIN
         // =========================================================
 
-        stage('ECR Login') {
+        stage('Login to ECR') {
             steps {
-
-                sh '''
-                    set -e
-
-                    echo "========================================"
-                    echo "Logging into Amazon ECR"
-                    echo "========================================"
-
-                    aws ecr get-login-password \
-                        --region ${AWS_REGION} \
-                        | docker login \
-                        --username AWS \
-                        --password-stdin ${ECR_REGISTRY}
-                '''
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                     credentialsId: 'shopsphere-aws'
+                ]) {
+                    sh '''
+                        set -e
+        
+                        echo "========================================"
+                        echo "Logging into Amazon ECR"
+                        echo "========================================"
+        
+                        aws sts get-caller-identity
+        
+                        aws ecr get-login-password \
+                            --region ${AWS_REGION} | \
+                        docker login \
+                            --username AWS \
+                            --password-stdin \
+                            ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                    '''
+                }
             }
         }
 

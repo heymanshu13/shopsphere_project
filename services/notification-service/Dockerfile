@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN apk update \
     && apk upgrade \
-    && adduser -D -s /bin/sh appuser
+    && adduser -D -u 1000 -s /bin/sh appuser
 
 COPY requirements.txt .
 
@@ -17,7 +17,7 @@ COPY app ./app
 
 RUN chown -R appuser:appuser /app
 
-USER appuser
+USER 1000
 
 EXPOSE 8000
 

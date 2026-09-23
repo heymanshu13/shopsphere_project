@@ -5,9 +5,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Create non-root user with a fixed numeric UID
 RUN apk update \
     && apk upgrade \
-    && adduser -D -s /bin/sh appuser
+    && adduser -D -u 1000 -s /bin/sh appuser
 
 COPY requirements.txt .
 
@@ -15,9 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 
-RUN chown -R appuser:appuser /app
+RUN chown -R 1000:1000 /app
 
-USER appuser
+# Run container as numeric non-root UID
+USER 1000
 
 EXPOSE 8000
 

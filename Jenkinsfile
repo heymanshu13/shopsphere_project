@@ -24,7 +24,28 @@ pipeline {
             }
         }
 
-
+        stage('AWS Authentication') {
+            steps {
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                     credentialsId: 'shopsphere-aws']
+                ]) {
+                    sh '''
+                        set -e
+        
+                        echo "AWS CLI:"
+                        aws --version
+        
+                        echo "AWS Identity:"
+                        aws sts get-caller-identity
+        
+                        echo "AWS Region:"
+                        echo "${AWS_REGION}"
+                    '''
+                }
+            }
+        }
+        
         // =========================================================
         // ENVIRONMENT CHECK
         // =========================================================

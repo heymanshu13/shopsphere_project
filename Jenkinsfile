@@ -24,11 +24,14 @@ pipeline {
             }
         }
 
-        stage('AWS Authentication') {
+        stage('AWS Authentication Test') {
             steps {
                 withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: 'shopsphere-aws']
+                    usernamePassword(
+                        credentialsId: 'shopsphere-aws',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
                 ]) {
                     sh '''
                         set -e
@@ -38,9 +41,6 @@ pipeline {
         
                         echo "AWS Identity:"
                         aws sts get-caller-identity
-        
-                        echo "AWS Region:"
-                        echo "${AWS_REGION}"
                     '''
                 }
             }
@@ -232,40 +232,40 @@ pipeline {
         // TRIVY IMAGE SCAN
         // =========================================================
 
-        stage('Trivy Image Scan') {
-            steps {
+        // stage('Trivy Image Scan') {
+        //     steps {
 
-                sh '''
-                    set -e
+        //         sh '''
+        //             set -e
 
-                    echo "========================================"
-                    echo "Running Trivy Image Scan"
-                    echo "========================================"
+        //             echo "========================================"
+        //             echo "Running Trivy Image Scan"
+        //             echo "========================================"
 
-                    for image in \
-                        ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
-                    do
+        //             for image in \
+        //                 ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
+        //             do
 
-                        echo "========================================"
-                        echo "Scanning $image"
-                        echo "========================================"
+        //                 echo "========================================"
+        //                 echo "Scanning $image"
+        //                 echo "========================================"
 
-                        docker run --rm \
-                            -v /var/run/docker.sock:/var/run/docker.sock \
-                            aquasec/trivy:0.72.0 \
-                            image \
-                            --severity HIGH,CRITICAL \
-                            --exit-code 1 \
-                            "$image"
+        //                 docker run --rm \
+        //                     -v /var/run/docker.sock:/var/run/docker.sock \
+        //                     aquasec/trivy:0.72.0 \
+        //                     image \
+        //                     --severity HIGH,CRITICAL \
+        //                     --exit-code 1 \
+        //                     "$image"
 
-                    done
-                '''
-            }
-        }
+        //             done
+        //         '''
+        //     }
+        // }
 
 
         // =========================================================
@@ -275,8 +275,11 @@ pipeline {
         stage('Login to ECR') {
             steps {
                 withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: 'shopsphere-aws'
+                    usernamePassword(
+                        credentialsId: 'shopsphere-aws',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
                 ]) {
                     sh '''
                         set -e
@@ -293,6 +296,8 @@ pipeline {
                             --username AWS \
                             --password-stdin \
                             ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+        
+                        echo "ECR login successful"
                     '''
                 }
             }

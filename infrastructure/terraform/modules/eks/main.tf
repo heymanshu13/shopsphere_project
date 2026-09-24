@@ -13,6 +13,25 @@ module "eks" {
   enable_irsa = true
 
   # --------------------------------------------------
+  # EKS Access Entries
+  # --------------------------------------------------
+  access_entries = {
+    shopsphere_admin = {
+      principal_arn = "arn:aws:iam::278177224853:user/ShopSphere"
+
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
+  # --------------------------------------------------
   # EKS Managed Add-ons
   # --------------------------------------------------
   addons = {

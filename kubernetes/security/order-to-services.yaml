@@ -12,11 +12,11 @@ spec:
     - Egress
 
   egress:
+
     - to:
         - podSelector:
             matchLabels:
               app: user-service
-
       ports:
         - protocol: TCP
           port: 8000
@@ -25,7 +25,6 @@ spec:
         - podSelector:
             matchLabels:
               app: product-service
-
       ports:
         - protocol: TCP
           port: 8000
@@ -34,7 +33,6 @@ spec:
         - podSelector:
             matchLabels:
               app: payment-service
-
       ports:
         - protocol: TCP
           port: 8000
@@ -43,7 +41,6 @@ spec:
         - podSelector:
             matchLabels:
               app: notification-service
-
       ports:
         - protocol: TCP
           port: 8000

@@ -1,6 +1,12 @@
 from fastapi import FastAPI
+from database import init_db
 
 app = FastAPI(title="ShopSphere User Service")
+
+
+@app.on_event("startup")
+def startup():
+    init_db()
 
 
 @app.get("/")

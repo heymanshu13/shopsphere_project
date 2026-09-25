@@ -26,7 +26,15 @@ spec:
           image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-user-service:23
 
           imagePullPolicy: IfNotPresent
-
+          
+          envFrom:
+            - configMapRef:
+                name: shopsphere-config
+            - secretRef:
+                name: shopsphere-secret
+            - secretRef:
+                name: shopsphere-db 
+   
           ports:
             - containerPort: 8000
               protocol: TCP

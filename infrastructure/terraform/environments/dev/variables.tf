@@ -1,3 +1,9 @@
+variable "database_password" {
+  description = "Master password for the ShopSphere RDS database"
+  type        = string
+  sensitive   = true
+}
+
 variable "aws_region" {
   description = "AWS region"
   type        = string

@@ -23,7 +23,7 @@ spec:
       containers:
         - name: product-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-product-service:24
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-product-service:25
           imagePullPolicy: IfNotPresent
 
 

@@ -19,7 +19,7 @@ spec:
       containers:
         - name: notification-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-notification-service:24
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-notification-service:25
 
           ports:
             - containerPort: 8000

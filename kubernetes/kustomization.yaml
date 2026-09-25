@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - config/
   - base/
+  - security/

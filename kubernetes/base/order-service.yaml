@@ -22,7 +22,7 @@ spec:
       containers:
         - name: order-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-order-service:25
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-order-service:23
 
           ports:
             - containerPort: 8000

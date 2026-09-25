@@ -7,7 +7,7 @@ module "rds" {
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
 
-  eks_cluster_security_group_id = module.eks.cluster_security_group_id
+  eks_cluster_security_group_id = module.eks.node_security_group_id
 
   database_password = var.database_password
 

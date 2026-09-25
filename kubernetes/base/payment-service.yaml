@@ -19,7 +19,7 @@ spec:
       containers:
         - name: payment-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-payment-service:25
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-payment-service:23
 
           ports:
             - containerPort: 8000

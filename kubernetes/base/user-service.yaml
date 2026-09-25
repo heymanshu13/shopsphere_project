@@ -23,7 +23,7 @@ spec:
       containers:
         - name: user-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-user-service:25
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-user-service:23
 
           imagePullPolicy: IfNotPresent
 

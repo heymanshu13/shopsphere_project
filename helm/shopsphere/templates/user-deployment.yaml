@@ -6,7 +6,7 @@ metadata:
 
   labels:
     app: user-service
-    app.kubernetes.io/part-of: shopsphere
+    app.kubernetes.io/managed-by: Helm
 
 spec:
   replicas: {{ .Values.services.user.replicas }}
@@ -54,6 +54,7 @@ spec:
 
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 3
 
           livenessProbe:
             httpGet:
@@ -62,10 +63,13 @@ spec:
 
             initialDelaySeconds: 15
             periodSeconds: 20
+            timeoutSeconds: 3
 
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
 
             capabilities:
               drop:

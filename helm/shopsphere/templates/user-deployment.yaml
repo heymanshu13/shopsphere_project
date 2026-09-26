@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: {{ .Values.global.namespace }}
+
+  labels:
+    app: user-service
+    app.kubernetes.io/part-of: shopsphere
+
+spec:
+  replicas: {{ .Values.services.user.replicas }}
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+        app.kubernetes.io/part-of: shopsphere
+
+    spec:
+      containers:
+
+        - name: user-service
+
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.services.user.image.repository }}:{{ .Values.services.user.image.tag }}"
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8000
+
+          envFrom:
+
+            - configMapRef:
+                name: shopsphere-config
+
+            - secretRef:
+                name: shopsphere-secret
+
+            - secretRef:
+                name: shopsphere-db
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+
+            capabilities:
+              drop:
+                - ALL
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: {{ .Values.global.namespace }}
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: user-service
+
+  ports:
+    - port: 8000
+      targetPort: 8000

@@ -1,0 +1,35 @@
+global:
+  namespace: shopsphere
+
+services:
+  user:
+    image:
+      tag: "28"
+
+  product:
+    image:
+      tag: "28"
+
+  order:
+    image:
+      tag: "28"
+
+  payment:
+    image:
+      tag: "28"
+
+  notification:
+    image:
+      tag: "28"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+ingress:
+  enabled: true

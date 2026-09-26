@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopsphere-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  USER_SERVICE_URL: "http://user-service:8000"
+  PRODUCT_SERVICE_URL: "http://product-service:8000"
+  PAYMENT_SERVICE_URL: "http://payment-service:8000"
+  NOTIFICATION_SERVICE_URL: "http://notification-service:8000"

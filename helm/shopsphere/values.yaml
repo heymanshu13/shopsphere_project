@@ -1,0 +1,74 @@
+global:
+  namespace: shopsphere
+
+  imageRegistry: "278177224853.dkr.ecr.ap-south-1.amazonaws.com"
+
+services:
+
+  user:
+    name: user-service
+    image:
+      repository: shopsphere-user-service
+      tag: "1.0"
+    replicas: 2
+    port: 8000
+
+  product:
+    name: product-service
+    image:
+      repository: shopsphere-product-service
+      tag: "1.0"
+    replicas: 2
+    port: 8000
+
+  order:
+    name: order-service
+    image:
+      repository: shopsphere-order-service
+      tag: "1.0"
+    replicas: 2
+    port: 8000
+
+  payment:
+    name: payment-service
+    image:
+      repository: shopsphere-payment-service
+      tag: "1.0"
+    replicas: 2
+    port: 8000
+
+  notification:
+    name: notification-service
+    image:
+      repository: shopsphere-notification-service
+      tag: "1.0"
+    replicas: 2
+    port: 8000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+ingress:
+  enabled: true
+  className: alb
+
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+
+database:
+  enabled: true
+  host: ""
+  port: "5432"
+  name: shopsphere
+  username: shopsphere_admin
+  existingSecret: shopsphere-db

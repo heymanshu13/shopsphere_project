@@ -23,7 +23,7 @@ spec:
       containers:
         - name: user-service
 
-          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-user-service:23
+          image: 278177224853.dkr.ecr.ap-south-1.amazonaws.com/shopsphere-user-service:28
 
           imagePullPolicy: IfNotPresent
           
@@ -38,12 +38,6 @@ spec:
           ports:
             - containerPort: 8000
               protocol: TCP
-
-          envFrom:
-            - configMapRef:
-                name: shopsphere-config
-            - secretRef:
-                name: shopsphere-secret
 
           resources:
             requests:

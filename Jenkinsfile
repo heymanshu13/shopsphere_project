@@ -124,29 +124,27 @@ pipeline {
         }
         
         stage('Gitleaks Secret Scan') {
-            steps {
-                sh '''
-                    set -e
-        
-                    echo "========================================"
-                    echo "Running Gitleaks Secret Scan"
-                    echo "========================================"
-        
-                    docker run --rm \
-                        -v "$WORKSPACE:/workspace" \
-                        zricethezav/gitleaks:latest \
-                        detect \
-                        --no-git \
-                        --source=/workspace \
-                        --config=/workspace/.gitleaks.toml \
-                        --no-banner \
-                        --redact \
-                        --exit-code 1
-        
-                    echo "Gitleaks scan passed"
-                '''
+                steps {
+                    sh '''
+                        set -e
+            
+                        echo "========================================"
+                        echo "Running Gitleaks Secret Scan"
+                        echo "========================================"
+            
+                        docker run --rm \
+                            -v /home/heymanshu/shopsphere:/workspace \
+                            zricethezav/gitleaks:latest \
+                            detect \
+                            --no-git \
+                            --source=/workspace \
+                            --config=/workspace/.gitleaks.toml \
+                            --no-banner \
+                            --redact \
+                            --exit-code 1
+                    '''
+                }
             }
-        }
 
         // =========================================================
         // TRIVY FILESYSTEM SCAN

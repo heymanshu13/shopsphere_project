@@ -1,0 +1,55 @@
+[
+    {
+        "NetworkAclId": "acl-04b0a6dd473d6cd05",
+        "Entries": [
+            [
+                100,
+                true,
+                "-1",
+                "allow",
+                "0.0.0.0/0",
+                null
+            ],
+            [
+                101,
+                true,
+                "-1",
+                "allow",
+                null,
+                null
+            ],
+            [
+                32767,
+                true,
+                "-1",
+                "deny",
+                "0.0.0.0/0",
+                null
+            ],
+            [
+                100,
+                false,
+                "-1",
+                "allow",
+                "0.0.0.0/0",
+                null
+            ],
+            [
+                101,
+                false,
+                "-1",
+                "allow",
+                null,
+                null
+            ],
+            [
+                32767,
+                false,
+                "-1",
+                "deny",
+                "0.0.0.0/0",
+                null
+            ]
+        ]
+    }
+]

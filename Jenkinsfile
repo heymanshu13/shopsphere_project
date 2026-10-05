@@ -122,25 +122,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Verify Gitleaks Config') {
-            steps {
-                sh '''
-                    echo "========================================"
-                    echo "Verifying Gitleaks configuration"
-                    echo "========================================"
-        
-                    echo "Current commit:"
-                    git log -1 --oneline
-        
-                    echo "Checking file:"
-                    ls -la .gitleaks.toml
-        
-                    echo "File contents:"
-                    cat .gitleaks.toml
-                '''
-            }
-        }
         
         stage('Gitleaks Secret Scan') {
             steps {

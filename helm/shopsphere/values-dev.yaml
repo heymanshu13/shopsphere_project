@@ -4,23 +4,23 @@ global:
 services:
   user:
     image:
-      tag: "30"
+      tag: "31"
 
   product:
     image:
-      tag: "30"
+      tag: "31"
 
   order:
     image:
-      tag: "30"
+      tag: "31"
 
   payment:
     image:
-      tag: "30"
+      tag: "31"
 
   notification:
     image:
-      tag: "30"
+      tag: "31"
 
 resources:
   requests:

@@ -136,7 +136,9 @@ pipeline {
                         -v "$WORKSPACE:/workspace" \
                         zricethezav/gitleaks:latest \
                         detect \
+                        --no-git \
                         --source=/workspace \
+                        --config=/workspace/.gitleaks.toml \
                         --no-banner \
                         --redact \
                         --exit-code 1

@@ -123,7 +123,55 @@ pipeline {
             }
         }
 
+        stage('Gitleaks Secret Scan') {
+            steps {
+                sh '''
+                    set -e
+        
+                    echo "========================================"
+                    echo "Running Gitleaks Secret Scan"
+                    echo "========================================"
+        
+                    docker run --rm \
+                        -v "$WORKSPACE:/workspace" \
+                        zricethezav/gitleaks:latest \
+                        detect \
+                        --source=/workspace \
+                        --no-banner \
+                        --redact \
+                        --exit-code 1
+        
+                    echo "Gitleaks scan passed"
+                '''
+            }
+        }
 
+        // =========================================================
+        // TRIVY FILESYSTEM SCAN
+        // =========================================================
+
+        stage('Trivy Filesystem Scan') {
+            steps {
+
+                sh '''
+                    set -e
+
+                    echo "========================================"
+                    echo "Running Trivy Filesystem Scan"
+                    echo "========================================"
+
+                    docker run --rm \
+                        -v "$WORKSPACE:/workspace" \
+                        aquasec/trivy:0.72.0 \
+                        fs \
+                        --scanners vuln,secret,misconfig \
+                        --severity HIGH,CRITICAL \
+                        --exit-code 1 \
+                        /workspace
+                '''
+            }
+        }
+        
         // =========================================================
         // SONARQUBE
         // =========================================================
@@ -202,70 +250,43 @@ pipeline {
 
 
         // =========================================================
-        // TRIVY FILESYSTEM SCAN
+        // TRIVY IMAGE SCAN
         // =========================================================
 
-        stage('Trivy Filesystem Scan') {
+        stage('Trivy Image Scan') {
             steps {
 
                 sh '''
                     set -e
 
                     echo "========================================"
-                    echo "Running Trivy Filesystem Scan"
+                    echo "Running Trivy Image Scan"
                     echo "========================================"
 
-                    docker run --rm \
-                        -v "$WORKSPACE:/workspace" \
-                        aquasec/trivy:0.72.0 \
-                        fs \
-                        --scanners vuln,secret,misconfig \
-                        --severity HIGH,CRITICAL \
-                        --exit-code 1 \
-                        /workspace
+                    for image in \
+                        ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
+                        ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
+                        ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
+                        ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
+                        ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
+                    do
+
+                        echo "========================================"
+                        echo "Scanning $image"
+                        echo "========================================"
+
+                        docker run --rm \
+                            -v /var/run/docker.sock:/var/run/docker.sock \
+                            aquasec/trivy:0.72.0 \
+                            image \
+                            --severity HIGH,CRITICAL \
+                            --exit-code 1 \
+                            "$image"
+
+                    done
                 '''
             }
         }
-
-
-        // =========================================================
-        // TRIVY IMAGE SCAN
-        // =========================================================
-
-        // stage('Trivy Image Scan') {
-        //     steps {
-
-        //         sh '''
-        //             set -e
-
-        //             echo "========================================"
-        //             echo "Running Trivy Image Scan"
-        //             echo "========================================"
-
-        //             for image in \
-        //                 ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
-        //                 ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
-        //                 ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
-        //                 ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
-        //                 ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
-        //             do
-
-        //                 echo "========================================"
-        //                 echo "Scanning $image"
-        //                 echo "========================================"
-
-        //                 docker run --rm \
-        //                     -v /var/run/docker.sock:/var/run/docker.sock \
-        //                     aquasec/trivy:0.72.0 \
-        //                     image \
-        //                     --severity HIGH,CRITICAL \
-        //                     --exit-code 1 \
-        //                     "$image"
-
-        //             done
-        //         '''
-        //     }
-        // }
 
 
         // =========================================================
@@ -354,6 +375,55 @@ pipeline {
             }
         }
 
+        stage('Update Helm Image Tags') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-shopsphere',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        set -e
+        
+                        echo "========================================"
+                        echo "Updating Helm Image Tags"
+                        echo "========================================"
+        
+                        VALUES_FILE="helm/shopsphere/values-dev.yaml"
+        
+                        echo "Updating all services to image tag: ${IMAGE_TAG}"
+        
+                        sed -i "s/tag: \\"[0-9]*\\"/tag: \\"${IMAGE_TAG}\\"/g" "$VALUES_FILE"
+        
+                        echo ""
+                        echo "Updated Helm values:"
+                        cat "$VALUES_FILE"
+        
+                        echo ""
+                        echo "Git diff:"
+                        git --no-pager diff -- "$VALUES_FILE"
+        
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@shopsphere.local"
+        
+                        git add "$VALUES_FILE"
+        
+                        git commit -m "Update ShopSphere image tags to ${IMAGE_TAG}" || {
+                            echo "No Helm image tag changes to commit"
+                            exit 0
+                        }
+        
+                        git push \
+                            https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/heymanshu13/shopsphere_project.git \
+                            HEAD:main
+        
+                        echo "Helm image tags pushed to GitHub"
+                    '''
+                }
+            }
+        }
 
         // =========================================================
         // CLEANUP LOCAL DOCKER IMAGES

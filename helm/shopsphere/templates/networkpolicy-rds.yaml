@@ -12,8 +12,7 @@ spec:
   egress:
     - to:
         - ipBlock:
-          cidr: 10.0.11.0/24
-
+            cidr: 10.0.11.0/24
         - ipBlock:
             cidr: 10.0.12.0/24
       ports:

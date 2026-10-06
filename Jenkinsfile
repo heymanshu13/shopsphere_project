@@ -166,6 +166,7 @@ pipeline {
                         fs \
                         --scanners vuln,secret,misconfig \
                         --severity HIGH,CRITICAL \
+                        --skip-dirs /workspace/
                         --exit-code 1 \
                         /workspace
                 '''

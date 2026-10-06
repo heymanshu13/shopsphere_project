@@ -11,3 +11,4 @@ resources:
   - ingress.yaml
   - order-hpa.yaml
   - order-pdb.yaml
+  - allow-rds-egress.yaml

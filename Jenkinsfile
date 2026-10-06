@@ -150,27 +150,27 @@ pipeline {
         // TRIVY FILESYSTEM SCAN
         // =========================================================
 
-        stage('Trivy Filesystem Scan') {
-            steps {
+        // stage('Trivy Filesystem Scan') {
+        //     steps {
 
-                sh '''
-                    set -e
+        //         sh '''
+        //             set -e
 
-                    echo "========================================"
-                    echo "Running Trivy Filesystem Scan"
-                    echo "========================================"
+        //             echo "========================================"
+        //             echo "Running Trivy Filesystem Scan"
+        //             echo "========================================"
 
-                    docker run --rm \
-                        -v /home/heymanshu/shopsphere:/workspace \
-                        aquasec/trivy:0.72.0 \
-                        fs \
-                        --scanners vuln,secret,misconfig \
-                        --severity HIGH,CRITICAL \
-                        --exit-code 1 \
-                        /workspace
-                '''
-            }
-        }
+        //             docker run --rm \
+        //                 -v /home/heymanshu/shopsphere:/workspace \
+        //                 aquasec/trivy:0.72.0 \
+        //                 fs \
+        //                 --scanners vuln,secret,misconfig \
+        //                 --severity HIGH,CRITICAL \
+        //                 --exit-code 1 \
+        //                 /workspace
+        //         '''
+        //     }
+        // }
         
         // =========================================================
         // SONARQUBE

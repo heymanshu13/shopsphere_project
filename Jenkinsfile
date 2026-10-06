@@ -161,7 +161,7 @@ pipeline {
                     echo "========================================"
 
                     docker run --rm \
-                        -v "$WORKSPACE:/workspace" \
+                        -v /home/heymanshu/shopsphere:/workspace \
                         aquasec/trivy:0.72.0 \
                         fs \
                         --scanners vuln,secret,misconfig \

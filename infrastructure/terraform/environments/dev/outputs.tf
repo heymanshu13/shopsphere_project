@@ -34,3 +34,16 @@ output "db_security_group_id" {
   description = "RDS security group ID"
   value       = module.rds.security_group_id
 }
+
+output "cluster_name" {
+  value = module.eks.cluster_name
+}
+
+output "cluster_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
+output "cluster_certificate_authority_data" {
+  value     = module.eks.cluster_certificate_authority_data
+  sensitive = true
+}

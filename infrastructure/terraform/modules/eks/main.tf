@@ -35,23 +35,27 @@ module "eks" {
   # EKS Managed Add-ons
   # --------------------------------------------------
   addons = {
-    vpc-cni = {
-      most_recent    = true
-      before_compute = true
+  vpc-cni = {
+    most_recent    = true
+    before_compute = true
 
-      configuration_values = jsonencode({
-        enableNetworkPolicy = "true"
-      })
-    }
-
-    kube-proxy = {
-      most_recent = true
-    }
-
-    coredns = {
-      most_recent = true
-    }
+    configuration_values = jsonencode({
+      enableNetworkPolicy = "true"
+    })
   }
+
+  kube-proxy = {
+    most_recent = true
+  }
+
+  coredns = {
+    most_recent = true
+  }
+
+  aws-ebs-csi-driver = {
+    most_recent = true
+  }
+}
 
   # --------------------------------------------------
   # EKS Managed Node Group

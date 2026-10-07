@@ -1,0 +1,72 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: shopsphere-alerts
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    release: kube-prometheus-stack
+    app.kubernetes.io/part-of: shopsphere
+spec:
+  groups:
+    - name: shopsphere.rules
+      rules:
+
+        - alert: ShopSphereTargetDown
+          expr: up{namespace="shopsphere"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ShopSphere target is down"
+            description: "A ShopSphere service target has been down for more than 2 minutes."
+
+        - alert: ShopSphereHighCPU
+          expr: |
+            (
+              sum by (pod) (
+                rate(container_cpu_usage_seconds_total{
+                  namespace="shopsphere",
+                  container!="",
+                  container!="POD"
+                }[5m])
+              )
+            ) > 0.4
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU usage"
+            description: "ShopSphere pod {{ "{{ $labels.pod }}" }} has high CPU usage."
+
+        - alert: ShopSpherePodRestarting
+          expr: |
+            increase(
+              kube_pod_container_status_restarts_total{
+                namespace="shopsphere"
+              }[15m]
+            ) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ShopSphere pod restarting"
+            description: "Pod {{ "{{ $labels.pod }}" }} has restarted multiple times."
+
+        - alert: ShopSphereHigh5xxRate
+          expr: |
+            (
+              sum(rate(http_requests_total{
+                namespace="shopsphere",
+                status=~"5.."
+              }[5m]))
+              /
+              sum(rate(http_requests_total{
+                namespace="shopsphere"
+              }[5m]))
+            ) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "High HTTP 5xx error rate"
+            description: "More than 5% of ShopSphere HTTP requests are returning 5xx responses."

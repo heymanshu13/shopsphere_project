@@ -20,5 +20,8 @@ spec:
     namespace: shopsphere
 
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=false
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=false

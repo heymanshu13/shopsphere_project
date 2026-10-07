@@ -1,39 +1,4 @@
 # --------------------------------------------------
-# EBS CSI Driver IAM Role
-# --------------------------------------------------
-
-resource "aws_iam_role" "ebs_csi_driver" {
-  name = "AmazonEKS_EBS_CSI_DriverRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-
-    Statement = [
-      {
-        Effect = "Allow"
-
-        Principal = {
-          Service = "pods.eks.amazonaws.com"
-        }
-
-        Action = [
-          "sts:AssumeRole",
-          "sts:TagSession"
-        ]
-      }
-    ]
-  })
-
-  tags = var.tags
-}
-
-resource "aws_iam_role_policy_attachment" "ebs_csi_driver" {
-  role       = aws_iam_role.ebs_csi_driver.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-}
-
-
-# --------------------------------------------------
 # EKS Cluster
 # --------------------------------------------------
 
@@ -81,11 +46,9 @@ module "eks" {
     vpc-cni = {
       most_recent    = true
       before_compute = true
-    
+
       configuration_values = jsonencode({
-        enableNetworkPolicy    = "true"
-        enablePrefixDelegation = "true"
-        warmPrefixTarget       = "1"
+        enableNetworkPolicy = "true"
       })
     }
 
@@ -95,22 +58,6 @@ module "eks" {
 
     coredns = {
       most_recent = true
-    }
-
-    eks-pod-identity-agent = {
-      most_recent    = true
-      before_compute = true
-    }
-
-    aws-ebs-csi-driver = {
-      most_recent = true
-
-      pod_identity_association = [
-        {
-          role_arn        = aws_iam_role.ebs_csi_driver.arn
-          service_account = "ebs-csi-controller-sa"
-        }
-      ]
     }
   }
 

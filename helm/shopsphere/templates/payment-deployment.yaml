@@ -65,6 +65,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: payment-service
+  labels:
+    app.kubernetes.io/part-of: shopsphere
   namespace: {{ .Values.global.namespace }}
 spec:
   type: ClusterIP
@@ -73,5 +75,6 @@ spec:
     app: payment-service
 
   ports:
-    - port: 8000
+    - name: http
+      port: 8000
       targetPort: 8000

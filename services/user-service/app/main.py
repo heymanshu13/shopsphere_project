@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from database import init_db
 
 app = FastAPI(title="ShopSphere User Service")
+Instrumentator().instrument(app).expose(app)
 
 
 @app.on_event("startup")

@@ -1,9 +1,10 @@
 import os
 import requests
-
+from prometheus_fastapi_instrumentator import Instrumentator
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI(title="ShopSphere Order Service")
+Instrumentator().instrument(app).expose(app)
 
 
 USER_SERVICE_URL = os.getenv(

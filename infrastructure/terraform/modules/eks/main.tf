@@ -40,7 +40,9 @@ module "eks" {
     before_compute = true
 
     configuration_values = jsonencode({
-      enableNetworkPolicy = "true"
+      enableNetworkPolicy    = "true"
+      enablePrefixDelegation = "true"
+      warmPrefixTarget       = "1"
     })
   }
 
@@ -59,6 +61,13 @@ module "eks" {
 
   aws-ebs-csi-driver = {
     most_recent = true
+
+    pod_identity_association = [
+      {
+        role_arn        = aws_iam_role.ebs_csi_driver.arn
+        service_account = "ebs-csi-controller-sa"
+      }
+    ]
   }
 }
 

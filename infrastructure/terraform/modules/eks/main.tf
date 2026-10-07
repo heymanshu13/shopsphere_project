@@ -81,9 +81,11 @@ module "eks" {
     vpc-cni = {
       most_recent    = true
       before_compute = true
-
+    
       configuration_values = jsonencode({
-        enableNetworkPolicy = "true"
+        enableNetworkPolicy    = "true"
+        enablePrefixDelegation = "true"
+        warmPrefixTarget       = "1"
       })
     }
 

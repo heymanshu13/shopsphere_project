@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: shopsphere
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    release: kube-prometheus-stack
+    app.kubernetes.io/part-of: shopsphere
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.global.namespace }}
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: shopsphere
+
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

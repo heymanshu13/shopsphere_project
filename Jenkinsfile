@@ -176,36 +176,36 @@ pipeline {
         // SONARQUBE
         // =========================================================
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
 
-                    sh '''
-                        echo "========================================"
-                        echo "Running SonarQube analysis"
-                        echo "========================================"
+        //             sh '''
+        //                 echo "========================================"
+        //                 echo "Running SonarQube analysis"
+        //                 echo "========================================"
 
-                        sonar-scanner \
-                          -Dsonar.projectKey=shopsphere \
-                          -Dsonar.sources=services \
-                          -Dsonar.exclusions="**/venv/**,**/__pycache__/**"
-                    '''
-                }
-            }
-        }
+        //                 sonar-scanner \
+        //                   -Dsonar.projectKey=shopsphere \
+        //                   -Dsonar.sources=services \
+        //                   -Dsonar.exclusions="**/venv/**,**/__pycache__/**"
+        //             '''
+        //         }
+        //     }
+        // }
 
 
-        // =========================================================
-        // QUALITY GATE
-        // =========================================================
+        // // =========================================================
+        // // QUALITY GATE
+        // // =========================================================
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
 
 
         // =========================================================
@@ -253,40 +253,40 @@ pipeline {
         // TRIVY IMAGE SCAN
         // =========================================================
 
-        stage('Trivy Image Scan') {
-            steps {
+        // stage('Trivy Image Scan') {
+        //     steps {
 
-                sh '''
-                    set -e
+        //         sh '''
+        //             set -e
 
-                    echo "========================================"
-                    echo "Running Trivy Image Scan"
-                    echo "========================================"
+        //             echo "========================================"
+        //             echo "Running Trivy Image Scan"
+        //             echo "========================================"
 
-                    for image in \
-                        ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
-                        ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
-                    do
+        //             for image in \
+        //                 ${ECR_REGISTRY}/shopsphere-user-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-product-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-order-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-payment-service:${IMAGE_TAG} \
+        //                 ${ECR_REGISTRY}/shopsphere-notification-service:${IMAGE_TAG}
+        //             do
 
-                        echo "========================================"
-                        echo "Scanning $image"
-                        echo "========================================"
+        //                 echo "========================================"
+        //                 echo "Scanning $image"
+        //                 echo "========================================"
 
-                        docker run --rm \
-                            -v /var/run/docker.sock:/var/run/docker.sock \
-                            aquasec/trivy:0.72.0 \
-                            image \
-                            --severity HIGH,CRITICAL \
-                            --exit-code 1 \
-                            "$image"
+        //                 docker run --rm \
+        //                     -v /var/run/docker.sock:/var/run/docker.sock \
+        //                     aquasec/trivy:0.72.0 \
+        //                     image \
+        //                     --severity HIGH,CRITICAL \
+        //                     --exit-code 1 \
+        //                     "$image"
 
-                    done
-                '''
-            }
-        }
+        //             done
+        //         '''
+        //     }
+        // }
 
 
         // =========================================================

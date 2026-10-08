@@ -12,6 +12,11 @@ services:
       tag: "1.0"
     replicas: 2
     port: 8000
+    serviceAccount:
+      roleArn: ""
+
+    secretsManager:
+      secretArn: ""
 
   product:
     name: product-service

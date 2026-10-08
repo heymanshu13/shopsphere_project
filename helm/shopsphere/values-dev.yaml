@@ -6,8 +6,9 @@ services:
     image:
       tag: "45"
     serviceAccount:
-      roleArn: ""
-
+      roleArn: "arn:aws:iam::278177224853:role/ShopSphereUserServiceSecretsRole"
+    secretsManager:
+      secretArn: "arn:aws:secretsmanager:ap-south-1:278177224853:secret:shopsphere/dev/database-dvlhRz"
   product:
     image:
       tag: "45"

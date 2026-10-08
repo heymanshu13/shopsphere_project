@@ -5,6 +5,8 @@ services:
   user:
     image:
       tag: "45"
+    serviceAccount:
+      roleArn: ""
 
   product:
     image:

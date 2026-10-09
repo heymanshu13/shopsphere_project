@@ -14,7 +14,7 @@ spec:
       rollout: user-service-rollout
   strategy:
     blueGreen:
-      activeService: user-service-green-active
+      activeService: user-service
       previewService: user-service-preview
       autoPromotionEnabled: false
       previewReplicaCount: 2

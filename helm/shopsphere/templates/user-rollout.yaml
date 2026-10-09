@@ -6,12 +6,15 @@ metadata:
   labels:
     app: user-service-green
     app.kubernetes.io/part-of: shopsphere
+
 spec:
   replicas: {{ .Values.services.user.replicas }}
+
   selector:
     matchLabels:
-      app: user-service
+      app: user-service-green
       rollout: user-service-rollout
+
   strategy:
     blueGreen:
       activeService: user-service
@@ -19,21 +22,26 @@ spec:
       autoPromotionEnabled: false
       previewReplicaCount: 2
       scaleDownDelaySeconds: 30
+
   template:
     metadata:
       labels:
-        app: user-service
+        app: user-service-green
         rollout: user-service-rollout
         app.kubernetes.io/part-of: shopsphere
+
     spec:
       serviceAccountName: user-service
+
       containers:
         - name: user-service
           image: "{{ .Values.global.imageRegistry }}/{{ .Values.services.user.image.repository }}:{{ .Values.services.user.image.tag }}"
           imagePullPolicy: IfNotPresent
+
           ports:
             - name: http
               containerPort: 8000
+
           envFrom:
             - configMapRef:
                 name: shopsphere-config
@@ -41,8 +49,10 @@ spec:
                 name: shopsphere-secret
             - secretRef:
                 name: shopsphere-db
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
           readinessProbe:
             httpGet:
               path: /health
@@ -50,6 +60,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 3
+
           livenessProbe:
             httpGet:
               path: /health
@@ -57,6 +68,7 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 20
             timeoutSeconds: 3
+
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -65,6 +77,7 @@ spec:
             capabilities:
               drop:
                 - ALL
+
 ---
 apiVersion: v1
 kind: Service
@@ -73,15 +86,18 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   labels:
     app.kubernetes.io/part-of: shopsphere
+
 spec:
   type: ClusterIP
   selector:
     app: user-service-green
     rollout: user-service-rollout
+
   ports:
     - name: http
       port: 8000
       targetPort: 8000
+
 ---
 apiVersion: v1
 kind: Service
@@ -90,11 +106,13 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   labels:
     app.kubernetes.io/part-of: shopsphere
+
 spec:
   type: ClusterIP
   selector:
     app: user-service-green
     rollout: user-service-rollout
+
   ports:
     - name: http
       port: 8000

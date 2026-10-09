@@ -10,7 +10,7 @@ spec:
   replicas: {{ .Values.services.user.replicas }}
   selector:
     matchLabels:
-      app: user-service-green
+      app: user-service
       rollout: user-service-rollout
   strategy:
     blueGreen:
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       labels:
-        app: user-service-green
+        app: user-service
         rollout: user-service-rollout
         app.kubernetes.io/part-of: shopsphere
     spec:

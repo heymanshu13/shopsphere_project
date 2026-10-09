@@ -90,7 +90,8 @@ spec:
   type: ClusterIP
 
   selector:
-    app: user-service
+    app: user-service-green
+    rollout: user-service-rollout
 
   ports:
     - name: http

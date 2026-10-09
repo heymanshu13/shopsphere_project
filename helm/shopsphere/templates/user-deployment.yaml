@@ -24,14 +24,6 @@ spec:
     spec:
       serviceAccountName: user-service
 
-      volumes:
-        - name: secrets-store-inline
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: user-service-secrets
-
       containers:
 
         - name: user-service
@@ -53,11 +45,6 @@ spec:
 
             - secretRef:
                 name: shopsphere-db
-
-          volumeMounts:
-            - name: secrets-store-inline
-              mountPath: /mnt/secrets-store
-              readOnly: true
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

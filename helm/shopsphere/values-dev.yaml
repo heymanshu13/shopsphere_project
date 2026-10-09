@@ -4,26 +4,26 @@ global:
 services:
   user:
     image:
-      tag: "45"
+      tag: "47"
     serviceAccount:
       roleArn: "arn:aws:iam::278177224853:role/ShopSphereUserServiceSecretsRole"
     secretsManager:
       secretArn: "arn:aws:secretsmanager:ap-south-1:278177224853:secret:shopsphere/dev/database-dvlhRz"
   product:
     image:
-      tag: "45"
+      tag: "47"
 
   order:
     image:
-      tag: "45"
+      tag: "47"
 
   payment:
     image:
-      tag: "45"
+      tag: "47"
 
   notification:
     image:
-      tag: "45"
+      tag: "47"
 
 resources:
   requests:

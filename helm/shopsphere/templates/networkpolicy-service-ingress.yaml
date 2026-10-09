@@ -10,7 +10,6 @@ spec:
         operator: In
         values:
           - user-service
-          - user-service-green
           - product-service
           - payment-service
           - notification-service

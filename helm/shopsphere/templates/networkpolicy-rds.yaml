@@ -5,12 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   podSelector:
-    matchExpressions:
-      - key: app
-        operator: In
-        values:
-          - user-service
-          - user-service-green
+    matchLabels:
+      app: user-service
   policyTypes:
     - Egress
   egress:

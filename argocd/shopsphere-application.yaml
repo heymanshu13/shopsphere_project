@@ -10,6 +10,7 @@ spec:
     repoURL: https://github.com/heymanshu13/shopsphere_project.git
     targetRevision: main
     path: helm/shopsphere
+
     helm:
       valueFiles:
         - values-dev.yaml
@@ -18,24 +19,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: shopsphere
 
-  ignoreDifferences:
-    - group: ""
-      kind: Service
-      name: user-service
-      namespace: shopsphere
-      jsonPointers:
-        - /spec/selector
-    - group: ""
-      kind: Service
-      name: user-service-preview
-      namespace: shopsphere
-      jsonPointers:
-        - /spec/selector
-
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=false
-      - RespectIgnoreDifferences=true
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=false

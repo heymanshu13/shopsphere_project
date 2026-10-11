@@ -90,7 +90,7 @@ spec:
   type: ClusterIP
 
   selector:
-    app: user-service
+    app: {{ if eq .Values.blueGreen.userService.activeColor "green" }}user-service-green{{ else }}user-service{{ end }}
 
   ports:
     - name: http

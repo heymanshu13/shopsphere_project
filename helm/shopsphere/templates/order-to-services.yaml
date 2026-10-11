@@ -12,8 +12,12 @@ spec:
   egress:
     - to:
         - podSelector:
-            matchLabels:
-              app: user-service
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - user-service
+                  - user-service-green
       ports:
         - protocol: TCP
           port: 8000

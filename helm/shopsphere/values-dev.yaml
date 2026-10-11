@@ -1,6 +1,10 @@
 global:
   namespace: shopsphere
 
+blueGreen:
+  userService:
+    activeColor: blue
+
 services:
   user:
     image:

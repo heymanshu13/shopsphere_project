@@ -22,3 +22,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "enable_cloudwatch_monitoring" {
+  description = "Enable CloudWatch monitoring resources"
+  type        = bool
+  default     = false
+}

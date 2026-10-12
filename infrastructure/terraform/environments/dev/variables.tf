@@ -21,3 +21,9 @@ variable "project_name" {
   type        = string
   default     = "shopsphere"
 }
+
+variable "enable_cloudwatch_monitoring" {
+  description = "Enable CloudWatch monitoring for ShopSphere EKS"
+  type        = bool
+  default     = false
+}

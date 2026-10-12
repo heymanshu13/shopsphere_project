@@ -1,6 +1,5 @@
-# --------------------------------------------------
+
 # EKS Cluster
-# --------------------------------------------------
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -11,15 +10,18 @@ module "eks" {
 
   endpoint_public_access = true
 
+  enabled_log_types = var.enable_cloudwatch_monitoring ? [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler"
+  ] : []
+
   vpc_id     = var.vpc_id
   subnet_ids = var.private_subnets
 
   enable_irsa = true
-
-
-  # --------------------------------------------------
-  # EKS Access Entries
-  # --------------------------------------------------
 
   access_entries = {
     shopsphere_admin = {
@@ -37,12 +39,8 @@ module "eks" {
     }
   }
 
-
-  # --------------------------------------------------
-  # EKS Managed Add-ons
-  # --------------------------------------------------
-
-  addons = {
+  addons = merge(
+  {
     vpc-cni = {
       most_recent    = true
       before_compute = true
@@ -59,12 +57,14 @@ module "eks" {
     coredns = {
       most_recent = true
     }
-  }
-
-
-  # --------------------------------------------------
-  # EKS Managed Node Group
-  # --------------------------------------------------
+  },
+  var.enable_cloudwatch_monitoring ? {
+    amazon-cloudwatch-observability = {
+      most_recent = true
+      preserve    = false
+    }
+  } : {}
+)
 
   eks_managed_node_groups = {
     default = {
@@ -79,13 +79,13 @@ module "eks" {
       labels = {
         Environment = var.environment
       }
+
+      iam_role_additional_policies = var.enable_cloudwatch_monitoring ? {
+        CloudWatchAgentServerPolicy = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+        AWSXrayWriteOnlyAccess      = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+      } : {}
     }
   }
-
-
-  # --------------------------------------------------
-  # Tags
-  # --------------------------------------------------
 
   tags = var.tags
 }

@@ -11,6 +11,8 @@ module "eks" {
 
   environment = var.environment
 
+  enable_cloudwatch_monitoring = var.enable_cloudwatch_monitoring
+
   tags = {
     Project     = var.project_name
     Environment = var.environment

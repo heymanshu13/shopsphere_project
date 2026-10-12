@@ -8,26 +8,26 @@ blueGreen:
 services:
   user:
     image:
-      tag: "48"
+      tag: "49"
     serviceAccount:
       roleArn: "arn:aws:iam::278177224853:role/ShopSphereUserServiceSecretsRole"
     secretsManager:
       secretArn: "arn:aws:secretsmanager:ap-south-1:278177224853:secret:shopsphere/dev/database-dvlhRz"
   product:
     image:
-      tag: "48"
+      tag: "49"
 
   order:
     image:
-      tag: "48"
+      tag: "49"
 
   payment:
     image:
-      tag: "48"
+      tag: "49"
 
   notification:
     image:
-      tag: "48"
+      tag: "49"
 
 resources:
   requests:

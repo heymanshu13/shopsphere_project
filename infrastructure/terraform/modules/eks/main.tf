@@ -39,32 +39,34 @@ module "eks" {
     }
   }
 
+  
   addons = merge(
-  {
-    vpc-cni = {
-      most_recent    = true
-      before_compute = true
+    {
+      vpc-cni = {
+        addon_version   = "v1.23.2-eksbuild.1"
+        before_compute  = true
 
-      configuration_values = jsonencode({
-        enableNetworkPolicy = "true"
-      })
-    }
+        configuration_values = jsonencode({
+          enableNetworkPolicy = "true"
+        })
+      }
 
-    kube-proxy = {
-      most_recent = true
-    }
+      kube-proxy = {
+        addon_version = "v1.35.3-eksbuild.49"
+      }
 
-    coredns = {
-      most_recent = true
-    }
-  },
-  var.enable_cloudwatch_monitoring ? {
-    amazon-cloudwatch-observability = {
-      most_recent = true
-      preserve    = false
-    }
-  } : {}
-)
+      coredns = {
+        addon_version = "v1.14.7-eksbuild.11"
+      }
+    },
+    var.enable_cloudwatch_monitoring ? {
+      amazon-cloudwatch-observability = {
+        most_recent = true
+        preserve    = false
+      }
+    } : {}
+  )
+
 
   eks_managed_node_groups = {
     default = {

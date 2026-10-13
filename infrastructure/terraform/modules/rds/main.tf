@@ -70,5 +70,6 @@ resource "aws_db_instance" "this" {
 
   tags = {
     Name = "${var.project_name}-${var.environment}-postgres"
+    TestChange = "s3-state-verification"
   }
 }

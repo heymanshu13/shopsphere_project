@@ -18,6 +18,8 @@ module "eks" {
     "scheduler"
   ] : []
 
+  create_cloudwatch_log_group = var.enable_cloudwatch_monitoring
+
   vpc_id     = var.vpc_id
   subnet_ids = var.private_subnets
 

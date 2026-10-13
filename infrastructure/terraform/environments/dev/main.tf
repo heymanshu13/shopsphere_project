@@ -22,4 +22,5 @@ module "rds" {
 
   deletion_protection = false
   skip_final_snapshot = true
+
 }

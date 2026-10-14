@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
 
 spec:
-  replicas: {{ .Values.services.user.replicas }}
 
   selector:
     matchLabels:

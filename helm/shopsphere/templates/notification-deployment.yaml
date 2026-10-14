@@ -7,7 +7,6 @@ metadata:
     app: notification-service
     app.kubernetes.io/part-of: shopsphere
 spec:
-  replicas: {{ .Values.services.notification.replicas }}
 
   selector:
     matchLabels:

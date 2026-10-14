@@ -7,7 +7,6 @@ metadata:
     app: payment-service
     app.kubernetes.io/part-of: shopsphere
 spec:
-  replicas: {{ .Values.services.payment.replicas }}
 
   selector:
     matchLabels:

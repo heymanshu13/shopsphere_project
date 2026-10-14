@@ -7,7 +7,6 @@ metadata:
     app: product-service
     app.kubernetes.io/part-of: shopsphere
 spec:
-  replicas: {{ .Values.services.product.replicas }}
   selector:
     matchLabels:
       app: product-service

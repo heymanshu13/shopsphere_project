@@ -70,7 +70,7 @@ module "eks" {
   )
 
 
-  eks_managed_node_groups = {
+    eks_managed_node_groups = {
     default = {
       instance_types = ["t3.small"]
 
@@ -82,6 +82,27 @@ module "eks" {
 
       labels = {
         Environment = var.environment
+      }
+
+      iam_role_additional_policies = var.enable_cloudwatch_monitoring ? {
+        CloudWatchAgentServerPolicy = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+        AWSXrayWriteOnlyAccess      = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+      } : {}
+    }
+
+    az_c = {
+      subnet_ids   = ["subnet-036a477e4832d2420"]
+      instance_types = ["t3.small"]
+
+      min_size     = 1
+      max_size     = 2
+      desired_size = 1
+
+      capacity_type = "ON_DEMAND"
+
+      labels = {
+        Environment = var.environment
+        AvailabilityZone = "ap-south-1c"
       }
 
       iam_role_additional_policies = var.enable_cloudwatch_monitoring ? {

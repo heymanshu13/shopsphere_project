@@ -1,4 +1,3 @@
-
 # EKS Cluster
 
 module "eks" {
@@ -41,12 +40,11 @@ module "eks" {
     }
   }
 
-  
   addons = merge(
     {
       vpc-cni = {
-        addon_version   = "v1.23.2-eksbuild.1"
-        before_compute  = true
+        addon_version  = "v1.23.2-eksbuild.1"
+        before_compute = true
 
         configuration_values = jsonencode({
           enableNetworkPolicy = "true"
@@ -69,8 +67,7 @@ module "eks" {
     } : {}
   )
 
-
-    eks_managed_node_groups = {
+  eks_managed_node_groups = {
     default = {
       instance_types = ["t3.small"]
 
@@ -89,3 +86,7 @@ module "eks" {
         AWSXrayWriteOnlyAccess      = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
       } : {}
     }
+  }
+
+  tags = var.tags
+}

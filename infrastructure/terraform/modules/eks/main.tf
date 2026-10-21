@@ -89,12 +89,3 @@ module "eks" {
         AWSXrayWriteOnlyAccess      = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
       } : {}
     }
-
-      iam_role_additional_policies = var.enable_cloudwatch_monitoring ? {
-        CloudWatchAgentServerPolicy = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-        AWSXrayWriteOnlyAccess      = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
-      } : {}
-    }
-  }
-
-}

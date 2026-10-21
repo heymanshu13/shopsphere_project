@@ -97,5 +97,4 @@ module "eks" {
     }
   }
 
-  tags = var.tags
 }
